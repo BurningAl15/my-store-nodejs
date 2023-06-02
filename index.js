@@ -6,6 +6,13 @@ app.get("/",(req,res)=>{
   res.send("Hi from my express server")
 })
 
+app.get("/new",(req,res)=>{
+  res.json({
+    name: "Aldhair",
+    price: 1000
+  })
+})
+
 app.listen(PORT,()=>{
   console.log(`My Port ${PORT}`)
 })

@@ -4,6 +4,8 @@ const PORT = 3000;
 
 const routerApi = require("./routers");
 
+app.use(express.json());
+
 app.get("/",(req,res)=>{
   res.send("Hi from my express server")
 })

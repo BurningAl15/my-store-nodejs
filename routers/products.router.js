@@ -2,9 +2,9 @@ const express = require("express");
 const {faker} = require("@faker-js/faker");
 
 const router = express.Router();
+let products=[];
 
 router.get("/",(req,res)=>{
-  const products=[];
   const {size} = req.query;
   const limit = size || 10;
   for(let index=0;index<limit;index++){
@@ -33,5 +33,32 @@ router.get("/:id",(req,res)=>{
   })
 })
 
+
+router.post("/create",(req,res)=>{
+  let newProduct = {
+    name: faker.commerce.productName(),
+    price: parseInt(faker.commerce.price()),
+    image: faker.image.imageUrl()
+  }
+  products.push(newProduct)
+  res.json({products,newProduct, message: "Product Created!"})
+})
+
+router.patch("/updateRandom/:id",(req,res)=>{
+  const {id} = req.params;
+  products = products.map((product,index)=>{
+    if(index.toString()===id){
+      return {
+        name: faker.commerce.productName(),
+        price: parseInt(faker.commerce.price()),
+        image: faker.image.imageUrl()
+      }
+    }
+    else{
+      return product
+    }
+  })
+  res.json({products, message: "Product Created!"})
+})
 
 module.exports = router;

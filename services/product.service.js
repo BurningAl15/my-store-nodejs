@@ -9,7 +9,7 @@ class ProductService {
     this.generate();
   }
 
-  generate(){
+  async generate(){
     const limit = 100;
     let randomUUID = uuidv4();
     for(let index=0;index<limit;index++){
@@ -24,7 +24,7 @@ class ProductService {
     }
   }
 
-  createRandom(){
+  async createRandom(){
     let randomUUID = uuidv4();
     let newProduct = {
       id: randomUUID,
@@ -37,7 +37,7 @@ class ProductService {
     return newProduct;
   }
 
-  create(data){
+  async create(data){
     let randomUUID = uuidv4();
     let newProduct = {
       id: randomUUID,
@@ -51,18 +51,22 @@ class ProductService {
   }
 
   find(){
-    return this.products;
+    return new Promise((resolve,reject)=>{
+      setTimeout(()=>{
+        resolve(this.products)
+      },5000)
+    })
   }
 
-  findOne(id){
+  async findOne(id){
     return this.products.filter(product=>product.id.toString()===id)[0]
   }
 
-  findByCategory(categoryId){
+  async findByCategory(categoryId){
 
   }
 
-  updateRandom(id){
+  async updateRandom(id){
     let updatedProduct;
     this.products = this.products.map((product)=>{
       if(product.id.toString()===id){
@@ -86,7 +90,7 @@ class ProductService {
     return updatedProduct;
   }
 
-  update(id, data){
+  async update(id, data){
     let updatedProduct;
     this.products = this.products.map((product)=>{
       if(product.id.toString()===id){
@@ -110,7 +114,7 @@ class ProductService {
     return updatedProduct;
   }
 
-  delete(id){
+  async delete(id){
     let deletedProduct;
     this.products = this.products.filter((product)=>{
       if(product.id.toString()!==id){

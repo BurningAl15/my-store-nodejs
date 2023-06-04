@@ -4,18 +4,18 @@ const router = express.Router();
 const ProductService = require("../services/product.service")
 const service = new ProductService();
 
-router.get("/",(req,res)=>{
-  const products = service.find();
+router.get("/",async (req,res)=>{
+  const products = await service.find();
   res.json({length:products.length,products})
 })
 
-router.get("/filter",(req,res)=>{
-  res.send("Im a filter")
-})
+// router.get("/filter",(req,res)=>{
+//   res.send("Im a filter")
+// })
 
-router.get("/:id",(req,res)=>{
+router.get("/:id",async (req,res)=>{
   const {id} = req.params;
-  const product = service.findOne(id);
+  const product = await service.findOne(id);
   console.log("Log",{id, product})
   if(product !== undefined)
     res.status(200).json(product)
@@ -23,33 +23,41 @@ router.get("/:id",(req,res)=>{
     res.status(404).json({message:"Product not found"})
 })
 
-router.post("/createRandom",(req,res)=>{
-  let newProduct = service.createRandom()
+router.post("/createRandom",async (req,res)=>{
+  let newProduct = await service.createRandom()
   res.status(201).json({newProduct, message: "Product Created!"})
 })
 
-router.post("/create",(req,res)=>{
+router.post("/create",async (req,res)=>{
   const body = req.body;
-  let newProduct = service.create(body)
+  let newProduct = await service.create(body)
   res.status(201).json({newProduct, message: "Product Created!"})
 })
 
-router.patch("/updateRandom/:id",(req,res)=>{
-  const {id} = req.params;
-  const products = service.updateRandom(id);
-  res.json({products, message: "Product Updated!"})
+router.patch("/updateRandom/:id",async (req,res)=>{
+  try{
+    const {id} = req.params;
+    const products = await service.updateRandom(id);
+    res.json({products, message: "Product Updated!"})
+  }catch(e){
+    res.status(404).json({message: e.message})
+  }
 })
 
-router.patch("/update/:id",(req,res)=>{
-  const body = req.body;
-  const {id} = req.params;
-  const products = service.update(id,body);
-  res.json({products, message: "Product Updated!"})
+router.patch("/update/:id", async (req,res)=>{
+  try{
+    const body = req.body;
+    const {id} = req.params;
+    const products = await service.update(id,body);
+    res.json({products, message: "Product Updated!"})
+  }catch(e){
+    res.status(404).json({message: e.message})
+  }
 })
 
-router.delete("/:id",(req,res)=>{
+router.delete("/:id",async (req,res)=>{
   const {id} = req.params;
-  const products = service.delete(id);
+  const products = awaitservice.delete(id);
   res.json({products, message: "Product Deleted!"})
 })
 

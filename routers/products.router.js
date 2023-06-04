@@ -1,24 +1,12 @@
 const express = require("express");
-const {faker} = require("@faker-js/faker");
-
 const router = express.Router();
-let products=[];
-const { v4: uuidv4, v5: uuidv5 } = require('uuid');
+
+const ProductService = require("../services/product.service")
+const service = new ProductService();
 
 router.get("/",(req,res)=>{
-  const {size} = req.query;
-  const limit = size || 10;
-  let randomUUID = uuidv4();
-  for(let index=0;index<limit;index++){
-    products.push({
-      id: randomUUID,
-      name: faker.commerce.productName(),
-      price: parseInt(faker.commerce.price()),
-      image: faker.image.imageUrl()
-    })
-    randomUUID = uuidv4();
-  }
-  res.json(products)
+  const products = service.find();
+  res.json({length:products.length,products})
 })
 
 router.get("/filter",(req,res)=>{
@@ -27,54 +15,28 @@ router.get("/filter",(req,res)=>{
 
 router.get("/:id",(req,res)=>{
   const {id} = req.params;
-  // const product = products.filter(product=>product.id.toString()===id)[0]
-  // console.log("Log",{id, product})
-  // res.json(product)
-  res.json({
-    id,
-    name: "Product 2",
-    price: 2000
-  })
+  const product = service.findOne(id);
+  console.log("Log",{id, product})
+  if(product !== undefined)
+    res.status(200).json(product)
+  else
+    res.status(404).json({message:"Product not found"})
 })
 
-
 router.post("/create",(req,res)=>{
-  let randomUUID = uuidv4();
-  let newProduct = {
-    id: randomUUID,
-    name: faker.commerce.productName(),
-    price: parseInt(faker.commerce.price()),
-    image: faker.image.url()
-  }
-  products.push(newProduct)
-  res.json({products,newProduct, message: "Product Created!"})
+  let newProduct = service.create()
+  res.status(201).json({newProduct, message: "Product Created!"})
 })
 
 router.patch("/updateRandom/:id",(req,res)=>{
   const {id} = req.params;
-  products = products.map((product)=>{
-    if(product.id.toString()===id){
-      return {
-        id: id,
-        name: faker.commerce.productName(),
-        price: parseInt(faker.commerce.price()),
-        image: faker.image.url()
-      }
-    }
-    else{
-      return product
-    }
-  })
-  res.json({products, message: "Product Created!"})
+  const products = service.update(id);
+  res.json({products, message: "Product Updated!"})
 })
 
 router.delete("/:id",(req,res)=>{
   const {id} = req.params;
-  products = products.filter((product)=>{
-    if(product.id.toString()!==id){
-      return product
-    }
-  })
+  const products = service.delete(id);
   res.json({products, message: "Product Deleted!"})
 })
 

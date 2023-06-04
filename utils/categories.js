@@ -11,6 +11,10 @@ const categories=[
   "Cat10",
 ]
 
+const getCategoryById = (id) => {
+  return categories[id || 0];
+}
+
 const getRandomCategory = () => {
   const randomIndex = Math.floor(Math.random() * categories.length);
   return categories[randomIndex];
@@ -20,4 +24,4 @@ const getAllCategories = () => {
   return categories;
 }
 
-module.exports = {getAllCategories, getRandomCategory}
+module.exports = {getCategoryById, getAllCategories, getRandomCategory}

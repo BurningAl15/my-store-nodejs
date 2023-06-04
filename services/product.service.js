@@ -1,6 +1,6 @@
 const {faker} = require("@faker-js/faker");
 const { v4: uuidv4, v5: uuidv5 } = require('uuid');
-const {getRandomCategory} = require("../utils/categories");
+const {getRandomCategory, getCategoryById} = require("../utils/categories");
 
 class ProductService {
 
@@ -24,7 +24,7 @@ class ProductService {
     }
   }
 
-  create(){
+  createRandom(){
     let randomUUID = uuidv4();
     let newProduct = {
       id: randomUUID,
@@ -32,6 +32,19 @@ class ProductService {
       price: parseInt(faker.commerce.price()),
       image: faker.image.url(),
       category: getRandomCategory(),
+    }
+    this.products.push(newProduct);
+    return newProduct;
+  }
+
+  create(data){
+    let randomUUID = uuidv4();
+    let newProduct = {
+      id: randomUUID,
+      name: data.name,
+      price: parseInt(data.price),
+      image: data.url || faker.image.url(),
+      category: getCategoryById(data.category),
     }
     this.products.push(newProduct);
     return newProduct;
@@ -49,7 +62,7 @@ class ProductService {
 
   }
 
-  update(id){
+  updateRandom(id){
     let updatedProduct;
     this.products = this.products.map((product)=>{
       if(product.id.toString()===id){
@@ -66,6 +79,34 @@ class ProductService {
         return product
       }
     })
+
+    if(updatedProduct === undefined){
+      throw new Error("Product not found");
+    }
+    return updatedProduct;
+  }
+
+  update(id, data){
+    let updatedProduct;
+    this.products = this.products.map((product)=>{
+      if(product.id.toString()===id){
+        updatedProduct = {
+          id: id,
+          name: data.name,
+          price: parseInt(data.price),
+          image: data.url || faker.image.url(),
+          category: getCategoryById(data.category),
+        }
+        return updatedProduct;
+      }
+      else{
+        return product
+      }
+    })
+
+    if(updatedProduct === undefined){
+      throw new Error("Product not found");
+    }
     return updatedProduct;
   }
 
@@ -79,6 +120,11 @@ class ProductService {
         deletedProduct = product;
       }
     })
+
+    if(deletedProduct === undefined){
+      throw new Error("Product not found");
+    }
+
     return deletedProduct;
   }
 }

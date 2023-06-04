@@ -23,14 +23,27 @@ router.get("/:id",(req,res)=>{
     res.status(404).json({message:"Product not found"})
 })
 
+router.post("/createRandom",(req,res)=>{
+  let newProduct = service.createRandom()
+  res.status(201).json({newProduct, message: "Product Created!"})
+})
+
 router.post("/create",(req,res)=>{
-  let newProduct = service.create()
+  const body = req.body;
+  let newProduct = service.create(body)
   res.status(201).json({newProduct, message: "Product Created!"})
 })
 
 router.patch("/updateRandom/:id",(req,res)=>{
   const {id} = req.params;
-  const products = service.update(id);
+  const products = service.updateRandom(id);
+  res.json({products, message: "Product Updated!"})
+})
+
+router.patch("/update/:id",(req,res)=>{
+  const body = req.body;
+  const {id} = req.params;
+  const products = service.update(id,body);
   res.json({products, message: "Product Updated!"})
 })
 

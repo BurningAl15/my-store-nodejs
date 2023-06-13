@@ -5,7 +5,7 @@ const {logErrors, errorHandler, boomErrorHandler} = require('./middlewares/error
 
 const cors = require('cors');
 const app=express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 // const whitelist = ['http://localhost:8080', 'https://myapp.com'];
 // const options = {
@@ -24,7 +24,7 @@ app.use(cors());
 
 app.use(express.json());
 
-app.get("/",(req,res)=>{
+app.get("/api/",(req,res)=>{
   res.send("Hi from my express server")
 })
 

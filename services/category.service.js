@@ -19,7 +19,6 @@ class CategoryService {
   }
 
   findByCategory(category){
-    console.log(category);
     return this.categories.filter(cat=>cat===category)
   }
 

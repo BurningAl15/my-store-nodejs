@@ -38,24 +38,24 @@ router.post("/create",async (req,res)=>{
   res.status(201).json({newProduct, message: "Product Created!"})
 })
 
-router.patch("/updateRandom/:id",async (req,res)=>{
+router.patch("/updateRandom/:id",async (req,res, next)=>{
   try{
     const {id} = req.params;
     const products = await service.updateRandom(id);
     res.json({products, message: "Product Updated!"})
   }catch(e){
-    res.status(404).json({message: e.message})
+    next(e);
   }
 })
 
-router.patch("/update/:id", async (req,res)=>{
+router.patch("/update/:id", async (req,res, next)=>{
   try{
     const body = req.body;
     const {id} = req.params;
     const products = await service.update(id,body);
     res.json({products, message: "Product Updated!"})
   }catch(e){
-    res.status(404).json({message: e.message})
+    next(e);
   }
 })
 

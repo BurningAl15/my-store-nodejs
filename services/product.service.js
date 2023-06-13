@@ -1,4 +1,5 @@
 const {faker} = require("@faker-js/faker");
+const boom = require('@hapi/boom');
 const { v4: uuidv4, v5: uuidv5 } = require('uuid');
 const {getRandomCategory, getCategoryById} = require("../utils/categories");
 
@@ -19,6 +20,7 @@ class ProductService {
         price: parseInt(faker.commerce.price()),
         image: faker.image.url(),
         category: getRandomCategory(),
+        isBlock: faker.datatype.boolean(),
       })
       randomUUID = uuidv4();
     }
@@ -59,8 +61,15 @@ class ProductService {
   }
 
   async findOne(id){
-    const name = this.getTotal();
-    return this.products.filter(product=>product.id.toString()===id)[0]
+    const product = this.products.filter(product=>product.id.toString()===id)[0];
+    if(product === undefined){
+      // throw new Error("Product not found");
+      throw boom.notFound("Product not found");
+    }
+    if(product.isBlock){
+      throw boom.conflict("Product is blocked");
+    }
+    return product;
   }
 
   async findByCategory(categoryId){
@@ -86,7 +95,8 @@ class ProductService {
     })
 
     if(updatedProduct === undefined){
-      throw new Error("Product not found");
+      // throw new Error("Product not found");
+      throw boom.notFound("Product not found");
     }
     return updatedProduct;
   }
@@ -110,7 +120,7 @@ class ProductService {
     })
 
     if(updatedProduct === undefined){
-      throw new Error("Product not found");
+      throw boom.notFound("Product not found");
     }
     return updatedProduct;
   }
@@ -127,7 +137,7 @@ class ProductService {
     })
 
     if(deletedProduct === undefined){
-      throw new Error("Product not found");
+      throw boom.notFound("Product not found");
     }
 
     return deletedProduct;

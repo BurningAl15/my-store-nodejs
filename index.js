@@ -7,7 +7,21 @@ const cors = require('cors');
 const app=express();
 const PORT = 3000;
 
+// const whitelist = ['http://localhost:8080', 'https://myapp.com'];
+// const options = {
+//   origin: (origin, callback) => {
+//     if(whitelist.includes(origin)){
+//       callback(null, true);
+//     }
+//     else{
+//       callback(new Error('Not Allowed'));
+//     }
+//   }
+// }
+
+// app.use(cors(options));
 app.use(cors());
+
 app.use(express.json());
 
 app.get("/",(req,res)=>{

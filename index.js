@@ -1,8 +1,11 @@
 const express = require("express");
+const routerApi = require("./routers");
+
+const {logErrors, errorHandler} = require('./middlewares/error.handler')
+
 const app=express();
 const PORT = 3000;
 
-const routerApi = require("./routers");
 
 app.use(express.json());
 
@@ -11,6 +14,9 @@ app.get("/",(req,res)=>{
 })
 
 routerApi(app);
+
+app.use(logErrors);
+app.use(errorHandler);
 
 app.listen(PORT,()=>{
   console.log(`My Port ${PORT}`)

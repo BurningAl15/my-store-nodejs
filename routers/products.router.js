@@ -13,14 +13,18 @@ router.get("/",async (req,res)=>{
 //   res.send("Im a filter")
 // })
 
-router.get("/:id",async (req,res)=>{
-  const {id} = req.params;
-  const product = await service.findOne(id);
-  console.log("Log",{id, product})
-  if(product !== undefined)
-    res.status(200).json(product)
-  else
-    res.status(404).json({message:"Product not found"})
+router.get("/:id",async (req,res, next)=>{
+  try{
+    const {id} = req.params;
+    const product = await service.findOne(id);
+    console.log("Log",{id, product})
+    if(product !== undefined)
+      res.status(200).json(product)
+    else
+      res.status(404).json({message:"Product not found"})
+  }catch(err){
+    next(err);
+  }
 })
 
 router.post("/createRandom",async (req,res)=>{

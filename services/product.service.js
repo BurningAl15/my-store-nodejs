@@ -59,6 +59,7 @@ class ProductService {
   }
 
   async findOne(id){
+    const name = this.getTotal();
     return this.products.filter(product=>product.id.toString()===id)[0]
   }
 
